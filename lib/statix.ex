@@ -345,7 +345,8 @@ defmodule Statix do
 
   @doc false
   def transmit(conn, type, key, val, options)
-      when (is_binary(key) or is_list(key)) and is_list(options) do
+      when (is_binary(key) or is_list(key) or is_tuple(key)) and
+            is_list(options) do
     sample_rate = Keyword.get(options, :sample_rate)
 
     if is_nil(sample_rate) or sample_rate >= :rand.uniform() do
