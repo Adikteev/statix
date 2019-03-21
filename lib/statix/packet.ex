@@ -19,9 +19,14 @@ defmodule Statix.Packet do
   end
 
   def build(header, name, key, val, options) do
-    [header, key, ?:, val, ?|, metric_type(name)]
+    {k, tags} =
+      case key do
+        {k, ts} -> {k, Keyword.get(options, :tags, []) ++ ts}
+        _ -> {key, options[:tags]}
+      end
+    [header, k, ?:, val, ?|, metric_type(name)]
     |> set_option(:sample_rate, options[:sample_rate])
-    |> set_option(:tags, options[:tags])
+    |> set_option(:tags, tags)
   end
 
   metrics = %{
